@@ -35,3 +35,4 @@ public class DepartmentController {
         return departmentService.getAllDepartment();
     }
 }
+//
