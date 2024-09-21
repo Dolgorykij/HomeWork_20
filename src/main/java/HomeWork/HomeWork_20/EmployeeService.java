@@ -1,5 +1,6 @@
 package HomeWork.HomeWork_20;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ public class EmployeeService implements EmployeeServiceInterface {
 
     @Override
     public Employee add(String firstName, String lastName, int department, int salary) {
-        Employee employee = new Employee(firstName, lastName, department, salary);
-        if (employeeList.contains(employee.fullName())) {
-            throw new EmployeeAlreadyAddedException("данный человек уже есть в списке");
-        }   else if (employeeList.size()>INITIAL_CAPACITY) {
-            throw new EmployeeStorageIsFullException("Слишком много сотрудников");
-        }
-        employeeList.add(employee);
-        return employee;
+        checkChar(firstName, lastName);
+            Employee employee = new Employee(firstName, lastName, department, salary);
+            if (employeeList.contains(employee.fullName())) { //&& StringUtils.isAlpha(employee.fullName())
+                throw new EmployeeAlreadyAddedException("данный человек уже есть в списке");
+            } else if (employeeList.size() > INITIAL_CAPACITY) {
+                throw new EmployeeStorageIsFullException("Слишком много сотрудников");
+            }
+            employeeList.add(employee);
+            return employee;
     }
 
     private void getKey(String firstName, String lastName) {
@@ -48,7 +50,6 @@ public class EmployeeService implements EmployeeServiceInterface {
             throw new EmployeeNotFoundException("Человек не найден");
         }
     }
-
     @Override
     public Employee remove(String firstName, String lastName) {
         Employee employee = new Employee(firstName,  lastName, 0, 0);
@@ -70,6 +71,14 @@ public class EmployeeService implements EmployeeServiceInterface {
     public List<Employee> workerks() {
         return employeeList;
     }
+    private void checkChar (String... values) {
+        for (String value : values) {
+            if (!StringUtils.isAlpha(value)) {
+                throw new WrongNameException();
+            }
+        }
+    }
+
 
 }
 
